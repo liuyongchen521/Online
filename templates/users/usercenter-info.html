@@ -9,7 +9,7 @@
         <div class="wp">
             <ul  class="crumbs">
                 <li><a href="{% url 'users:index' %}">首页</a>></li>
-                <li><a href="/user/home/">个人中心</a>></li>
+                <li><a href="{% url 'users:user_info' %}">个人中心</a>></li>
                 <li>个人信息</li>
             </ul>
         </div>
@@ -44,13 +44,14 @@
                     </div>
 				</div>
 				<form class="perinform" id="jsEditUserForm" autocomplete="off">
+                    {% csrf_token %}
 					<ul class="right">
                         <li>昵       称：
                            <input type="text" name="nick_name" id="nick_name" value="{{ request.user.nick_name }}" maxlength="10">
                             <i class="error-tips"></i>
                         </li>
                         <li>生       日：
-                           <input type="text" id="birth_day" name="birday" value="{{ request.user.birthday }}" readonly="readonly"/>
+                           <input type="text" id="birth_day" name="birthday" value="{{ request.user.birthday }}" readonly="readonly"/>
                             <i class="error-tips"></i>
                         </li>
                         <li>性       别：
@@ -72,7 +73,7 @@
                             <input type="button" id="jsEditUserBtn" value="保存">
                         </li>
                     </ul>
-                    <input type='hidden' name='csrfmiddlewaretoken' value='799Y6iPeEDNSGvrTu3noBrO4MBLv6enY' />
+                    {% csrf_token %}
 				</form>
 			</div>
 		</div>

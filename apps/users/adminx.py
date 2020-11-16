@@ -1,5 +1,5 @@
 import xadmin
-from apps.users.models import UserProfile
+from apps.users.models import UserProfile,Banner
 from xadmin import views
 
 class BaseSetting(object):
@@ -27,14 +27,14 @@ class UserProfileAdmin(object):
     list_filter = ['username','gender','mobile','address']
 
     model_icon = "fa fa-user"
-    style_fields = {"address": "ueditor"}
     ordering = ["-date_joined"] #排序 用户最新排在最前
-    readonly_fields = ["nick_name"]  #只读属性，只显示不能编辑
+    # readonly_fields = ["nick_name"]  #只读属性，只显示不能编辑
     # exclude = ["gender"] #不显示的字段
     list_editable = ["mobile"]  #可在首页编辑的字段
     refresh_times =[3,5]  #自动刷新  3秒 5 秒
 
 xadmin.site.unregister(UserProfile)
+xadmin.site.register(Banner)
 xadmin.site.register(UserProfile,UserProfileAdmin)
 xadmin.site.register(views.BaseAdminView,BaseSetting)
 xadmin.site.register(views.CommAdminView,GlobalSettings)

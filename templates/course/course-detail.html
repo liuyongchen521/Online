@@ -4,6 +4,26 @@
     公开课列表
 {% endblock %}
 
+{% block nav %}
+        <nav>
+            <div class="nav">
+                <div class="wp">
+                    <ul>
+                        <li ><a href="{% url 'users:index' %}">首页</a></li>
+                        <li class="active">
+                            <a href="{% url 'course:course_list' %}">
+                                公开课<img class="hot" src="{% static 'images/nav_hot.png' %}">
+                            </a>
+                        </li>
+                        <li >
+                            <a href="{% url 'org:teacher_list' %}">授课教师</a>
+                        </li>
+                        <li><a href="{% url 'org:org_list' %}">授课机构</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        {% endblock %}
 {% block custom_bread %}
      <section>
 	<div class="wp">
@@ -79,11 +99,11 @@
                     <p>世界名校，课程权威</p>
                 </div>
                 <div class="pic">
-                    <a href="/company/14/">
+                    <a href="{% url 'org:home' course.course_org.id %}">
                         <img width="150" height="80" src="{{ MEDIA_URL }}{{ course.course_org.image }}"/>
                     </a>
                 </div>
-                <a href="/company/14/">
+                <a href="{% url 'org:home' course.course_org.id %}">
                     <h2 class="center" title="清华大学">{{ course.course_org.name }}</h2>
                 </a>
                 <div class="btn notlogin" data-favid="14" id="jsRightBtn">
@@ -119,7 +139,9 @@
 					</ul>
 				</div>
 				<div class="tab_cont tab_cont1">
-                    {{ course.detail }}
+                         {% autoescape off %}
+                         {{ course.detail }}
+                         {% endautoescape %}
 				</div>
 				<div class="tab_cont tab_cont2" >
 					<div class="comment">

@@ -14,11 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 import xadmin
-from django.urls import path,include
+from django.urls import path,include,re_path
 from django.views.static import serve
-from Online.settings import MEDIA_ROOT
+from Online.settings import MEDIA_ROOT,STATIC_ROOT
 from django.views.generic import TemplateView
-import apps
+
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),
     path("media/<path:path>",serve,{"document_root":MEDIA_ROOT}), #配置文件存储的路由
@@ -29,4 +29,10 @@ urlpatterns = [
     path("captcha/",include("captcha.urls")), #添加一下 captcha验证码的路由
     path("org/",include("apps.organization.urls",namespace="org")),#包含所有机构的路由
     path("course/",include("apps.course.urls",namespace="course")),#包含所有课程的路由
+    re_path(r'^static/(?P<path>.*)', serve, {"document_root": STATIC_ROOT }),
 ]
+
+#全局404页面配置
+# hardler404 = "users.views.page_not_found"
+#全局500页面配置
+# handler500 = "apps.users.views.page_error"

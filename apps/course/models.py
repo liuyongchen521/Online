@@ -1,7 +1,7 @@
 from datetime import datetime
 from apps.organization.models import CourseOrg,Teacher
 from django.db import models
-
+from DjangoUeditor.models import UEditorField
 #Course  课程表
 class Course(models.Model):
     DEGREE_CHOICES = (
@@ -11,7 +11,7 @@ class Course(models.Model):
     )
     name = models.CharField(verbose_name="课程名", max_length=50)
     desc = models.CharField(verbose_name="课程描述", max_length=300)
-    detail = models.TextField(verbose_name="课程详情")
+    detail = UEditorField(width=600,height=300,imagePath="courses/image/",filePath="courses/ueditor/",default="",verbose_name="课程详情")
     degree = models.CharField(verbose_name='难度', choices=DEGREE_CHOICES, max_length=2)
     learn_times = models.IntegerField(verbose_name="学习时长(分钟数)", default=0)
     students = models.IntegerField(verbose_name="学习人数", default=0)
@@ -25,6 +25,13 @@ class Course(models.Model):
     teacher = models.ForeignKey(Teacher, verbose_name='讲师', null=True, blank=True, on_delete=models.CASCADE)
     youneed_know = models.CharField('课程须知', max_length=300, default='')
     teacher_tell = models.CharField('老师告诉你', max_length=300, default='')
+    is_banner = models.BooleanField('是否轮播', default=False)
+
+    def get_zj_nums(self):
+        # 获取课程的章节数
+
+        return self.lesson_set.all().count()
+    get_zj_nums.short_description = '章节数'  # 在后台显示的名称
 
     class Meta:
         verbose_name = "课程"
@@ -44,6 +51,23 @@ class Course(models.Model):
         #获取这门课程的学习用户
         return self.usercourse_set.all()[:5]
 
+    def go_to(self):
+        from django.utils.safestring import mark_safe
+        # mark_safe后就不会转义
+        return mark_safe("<a href='http://127.0.0.1:8000/xadmin/course/course/{}/update/'>跳转</a>".format(self.id))
+
+    go_to.short_description = "跳转"
+
+
+
+
+class BannerCourse(Course):
+    '''显示轮播课程'''
+    class Meta:
+        verbose_name = '轮播课程'
+        verbose_name_plural = verbose_name
+        #这里必须设置proxy=True，这样就不会再生成一张表，同时还具有Model的功能
+        proxy = True
 
 #Lesson 章节信息表
 class Lesson(models.Model):
